@@ -104,8 +104,8 @@ namespace ConsoleApp4
 
                 return QuickSort(less).Append(mid).Concat(QuickSort(greater)).ToList();
             }
-
-        }
+ 
+}
     }
     public class User
     {
@@ -113,5 +113,129 @@ namespace ConsoleApp4
         public string LastName { get; set; }
         public int Age { get; set; }
     }
-
+    //-----
+    
 }
+
+class Node
+{
+    public string Name { get; }
+    public List<Node> Children { get; }
+
+    public Node(string name)
+    {
+        Name = name;
+        Children = new List<Node>();
+    }
+
+    public Node AddChildren(Node node, bool bidirect = true)
+    {
+        Children.Add(node);
+        if (bidirect)
+        {
+            node.Children.Add(this);
+        }
+        return this;
+    }
+
+    public void Handler()
+    {
+        Console.WriteLine($"visited {this.Name}");
+    }
+}
+
+class DepthFirstSearch
+{
+    private HashSet<Node> visited;
+    private LinkedList<Node> path_DFS;
+    private Node goal;
+    public LinkedList<Node> DFS(Node start, Node goal)
+    {
+        visited = new HashSet<Node>();
+        path_DFS = new LinkedList<Node>();
+        this.goal = goal;
+        DFS(start);
+        if (path_DFS.Count > 0)
+        {
+            path_DFS.AddFirst(start);
+        }
+        return path_DFS;
+    }
+
+    private bool DFS(Node node)
+    {
+        node.Handler();
+        if (node == goal)
+        {
+            return true;
+        }
+        visited.Add(node);
+        foreach (var child in node.Children.Where(x => !visited.Contains(x)))
+        {
+            if (DFS(child))
+            {
+                path_DFS.AddFirst(child);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    internal object DFS(Node n06, Node n10, int v)
+    {
+        throw new NotImplementedException();
+    }
+}
+class BreadthFirstSearch
+    {
+        private HashSet<Node> visited;
+        private LinkedList<Node> path_BFS;
+        private Node goal;
+
+        public LinkedList<Node> BFS(Node start, Node goal)
+        {
+            visited = new HashSet<Node>();
+            path_BFS = new LinkedList<Node>();
+            this.goal = goal;
+            BFS(start);
+            if (path_BFS.Count > 0)
+            {
+                path_BFS.AddLast(start);
+            }
+            return path_BFS;
+        }
+
+        private bool BFS(Node node)
+        {
+            node.Handler();
+            if (node == goal)
+            {
+                return true;
+            }
+            visited.Add(node);
+            foreach (var child in node.Children.Where(x => !visited.Contains(x)))
+            {
+                if (BFS(child))
+                {
+                    path_BFS.AddLast(child);
+                    return true;
+                }
+            }
+            return false;
+        }
+    private static void PrintPath_BFS(LinkedList<Node> path_BFS)
+    {
+        Console.WriteLine();
+        if (path_BFS.Count == 0)
+        {
+            Console.WriteLine("You shall not pass!");
+        }
+        else
+        {
+            Console.WriteLine(string.Join(" -> ", path_BFS.Select(x => x.Name)));
+        }
+        Console.Read();
+    }
+}
+    //---
+
